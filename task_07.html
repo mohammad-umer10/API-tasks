@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>API-Task-07</title>
+    </head>
+    <body>
+  
+        <h2>Weather App</h2>
+        <input type="text" id="city" placeholder="Enter city name">
+        <button onclick="getWeather()">Get Weather</button>
+        <div id="output"></div>
+
+        <script>
+            function getWeather() {
+                const city = document.getElementById("city").value;
+                const output = document.getElementById("output");
+
+                if (city === "") {
+                    output.innerHTML = "Enter city name";
+                    return;
+                }
+
+                output.innerHTML = "Loading...";
+
+                fetch("https://api.openweathermap.org/data/2.5/weather?q="+ city + "&appid=6c09567122c2507bc58bc83f626c7f35&units=metric")
+                    .then(res => res.json())
+                    .then(data => {
+                    if (data.cod != 200) {
+                        output.innerHTML = "City not found";
+                        return;
+                    }
+
+                    output.innerHTML =
+                        "Temp: " + data.main.temp + " °C<br>" +
+                        "Weather: " + data.weather[0].description;
+                    })
+
+                    .catch(() => {
+                        output.innerHTML = "Error";
+                    });
+                }
+        </script>
+
+    </body>
+</html>

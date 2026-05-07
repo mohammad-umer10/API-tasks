@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>API-Task-06</title>
+    </head>
+    <body>
+
+        <h2>Location Tracker</h2>
+        <button onclick="getLocation()">Get Location</button>
+        <div id="output"></div>
+
+        <script>
+            const output = document.getElementById("output");
+
+            window.onload = function () {
+                const savedLat = localStorage.getItem("latitude");
+                const savedLon = localStorage.getItem("longitude");
+
+                if (savedLat && savedLon) {
+                    output.innerHTML = `
+                        <p><b>Saved Latitude:</b> ${savedLat}</p>
+                        <p><b>Saved Longitude:</b> ${savedLon}</p>
+                        <p class="saved">Loaded from localStorage</p>
+                    `;
+                }
+            };
+
+            function getLocation() {
+                output.innerHTML = "<p class='loading'>Getting location...</p>";
+
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+
+                    localStorage.setItem("latitude", lat);
+                    localStorage.setItem("longitude", lon);
+
+                    output.innerHTML = `
+                        <p><b>Current Location:</b></p>
+                        <p>Latitude: ${lat}</p>
+                        <p>Longitude: ${lon}</p>
+                        <p class="saved">Saved successfully</p>
+                    `;
+                    },
+
+                    function (error) {
+                        if (error.code === error.PERMISSION_DENIED) {
+                            output.innerHTML = "<p class='error'>Access denied by user</p>";
+                        }
+                    }
+                );
+            }
+        </script>
+
+    </body>
+</html>

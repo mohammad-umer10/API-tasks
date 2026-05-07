@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>API-Task-08</title>
+    </head>
+    <body>
+
+        <h2>User List</h2>
+        <p id="userList"></p>
+        <h3>Selected User</h3>
+        <div id="details"></div>
+
+        <script>
+            const userList = document.getElementById("userList");
+            const details = document.getElementById("details");
+
+            let usersData = [];
+            fetch("https://jsonplaceholder.typicode.com/users")
+            .then(res => res.json())
+            .then(data => {
+                usersData = data;
+                showUsers(data);
+                restoreUser();
+            });
+
+            function showUsers(users) {
+                users.forEach(user => {
+                    const li = document.createElement("li");
+                    li.innerHTML = user.name;
+
+                    li.onclick = () => {
+                        showDetails(user);
+                        localStorage.setItem("lastUser", JSON.stringify(user));
+                    };
+                    userList.appendChild(li);
+                });
+            }
+
+            function showDetails(user) {
+                details.innerHTML = `
+                    Name: ${user.name} <br>
+                    Email: ${user.email} <br>
+                    Phone: ${user.phone}
+                `;
+            }
+
+            
+            function restoreUser() {
+                const saved = localStorage.getItem("lastUser");
+
+                if (saved) {
+                    const user = JSON.parse(saved);
+                    showDetails(user);
+                }
+            }
+        </script>
+    </body>
+</html>
